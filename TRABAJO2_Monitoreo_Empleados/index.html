@@ -17,15 +17,15 @@
                     <div class="col-md-2"></div>
                     <div class="col-md-5">
                         <label><b>Nombre</b><span id="soloempleados"><em> *</em></span></label><br>
-                        <input class="form-control" type="text" id="nombre" name="nombre" maxlength="12" pattern=".{1,12}" required>
+                        <input class="form-control" type="text" id="nombre" name="nombre" maxlength="15" pattern="[a-zA-ZÀ-ÿ\s'-]+" required>
 
                         <label><b>Edad</b> <span id="soloempleados"><em> *</em></span></label><br>
-                        <input class="form-control" type="number" id="edad" name="edad" step="0" required>
+                        <input class="form-control" type="number" id="edad" name="edad" step="0" maxlength="2" pattern="[1-9]+" required>
 
-                        <label><b>Identificación</b> <span id="soloempleados"> *Empleados</span></label><br>
+                        <label><b>Identificación</b> <span id="soloempleados"><em>  *Empleados</em></span></label><br>
                         <input class="form-control" type="text" id="identificacion" name="identificacion" readonly>
 
-                        <label><b>Experiencia</b><span id="soloempleados"> *Empleados</span><br></label><br>
+                        <label><b>Experiencia</b><span id="soloempleados"><em>  *Empleados</em></span><br></label><br>
                         <input class="form-control" type="number" id="experiencia" name="experiencia" readonly>
 
                     </div>
@@ -50,7 +50,7 @@
                     <div class="row">
                         <div class="col-md-2"></div>
                         <div class="col-md-7">
-                            <input type="text" id="solucion" name="solucion">
+                            <ul id="solucion"></ul>
                         </div>
                         <div class="col-md-3"></div>
                     </div>

@@ -39,7 +39,7 @@ header {
 
 #solucion {
     width: 90vh;
-    height: 4vh;
+    height: 30vh;
 }
 
 #botonito {
@@ -60,8 +60,8 @@ header {
 }
 
 #formulario2 {
-    padding-top: 20vh;
-    padding-bottom: 20vh;
+    padding-top: 10vh;
+    padding-bottom: 10vh;
     background-color: whitesmoke;
     border-radius: 8px;
     box-shadow: 0, 0, 0, 0.5px;

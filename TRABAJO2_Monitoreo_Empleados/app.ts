@@ -1,29 +1,35 @@
-let inputs = Array.from(document.querySelectorAll('#nombre, #edad')) as HTMLInputElement[];
-let sistema = document.querySelector('#sistema') as HTMLSelectElement;
-let form = document.querySelector('#form2') as HTMLFormElement;
-let [nombreInput, edadInput] = inputs;
-
-inputs.forEach(input => input.addEventListener('input', () => sistema.dispatchEvent(new Event('change'))));
+let nombre = document.getElementById('nombre') as HTMLInputElement;
+let edad = document.getElementById('edad') as HTMLInputElement;
+let sistema = document.getElementById('sistema') as HTMLSelectElement;
+let identificacion = document.getElementById('identificacion') as HTMLInputElement;
+let experiencia = document.getElementById('experiencia') as HTMLInputElement;
+let solucion = document.getElementById('solucion') as HTMLUListElement;
 
 sistema.addEventListener('change', () => {
-    inputs.forEach(input => input.toggleAttribute('readonly', sistema.value !== 'empleado'));
+    if (sistema.value === 'empleado') {
+        identificacion.removeAttribute('readonly');
+        experiencia.removeAttribute('readonly');
+    } else {
+        identificacion.setAttribute('readonly', '');
+        experiencia.setAttribute('readonly', '');
+    }
 });
 
 sistema.dispatchEvent(new Event('change'));
 
 class Persona {
-    nombre: string = "";
-    edad: number = 0;
-    constructor(nombre: string, edad: number) {
-        this.nombre = nombre;
-        this.edad = edad;
-    }
+    constructor(public nombre: string, public edad: number) { }
 }
 
 class Empleado extends Persona {
     identificacion: string = '';
     experiencia: number = 0;
-    constructor(nombre: string, edad: number, identificacion: string, experiencia: number) {
+    constructor(
+        nombre: string,
+        edad: number,
+        identificacion: string,
+        experiencia: number
+    ) {
         super(nombre, edad);
         this.identificacion = identificacion;
         this.experiencia = experiencia;
@@ -36,12 +42,15 @@ let empleados = new Map<string, Empleado>();
 let edadEx = 0;
 let edadExMediaEx = 0;
 
-document.getElementById("solucion")?.addEventListener("click", () => {
+document.getElementById("botonito")?.addEventListener("click", (event) => {
+    event.preventDefault();
     let nombreInput = (<HTMLInputElement>document.getElementById("nombre")).value;
     let edadInput = Number((<HTMLInputElement>document.getElementById("edad")).value);
 
+    let sistema = (<HTMLSelectElement>document.getElementById("sistema")).value;
+
     let usuario: Persona;
-    if (sistema.value === 'empleado') {
+    if (sistema === 'empleado') {
         let identificacionInput = (<HTMLInputElement>document.getElementById("identificacion")).value;
         let experienciaInput = Number((<HTMLInputElement>document.getElementById("experiencia")).value);
 
@@ -54,6 +63,15 @@ document.getElementById("solucion")?.addEventListener("click", () => {
     edadEx += edadInput;
     edadExMediaEx = edadEx / personas.size;
 
-    let mostrarInfo = `<p>Nombre: ${nombreInput}, Edad: ${edadInput}</p>`;
-    (<HTMLInputElement>document.getElementById("solucion")).value = mostrarInfo;
+    let mostrarInfo = `<li>Nombre: <span style="color: ${usuario instanceof Empleado ? 'black' : 'black'}; font-weight: ${usuario instanceof Empleado ? 'bold' : 'normal'}">${nombreInput}</span>, Edad: ${edadInput}`;
+    if (sistema === 'empleado') {
+        mostrarInfo += `, Identificación: ${(<Empleado>usuario).identificacion}, Experiencia: ${(<Empleado>usuario).experiencia}</li>`;
+    } else {
+        mostrarInfo += `</li>`;
+    }
+
+    const solucionList = document.getElementById("solucion") as HTMLUListElement;
+    const nuevoElementoLi = document.createElement("li");
+    nuevoElementoLi.innerHTML = mostrarInfo;
+    solucionList.appendChild(nuevoElementoLi);
 });
