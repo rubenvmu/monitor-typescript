@@ -1,0 +1,68 @@
+#area {
+    background-color: aliceblue;
+}
+
+:host {
+    max-width: 1280px;
+    padding: 2rem;
+    text-align: center;
+}
+
+tr:nth-child(even) {
+    background: #F2F2F2;
+}
+
+tr:nth-child(odd) {
+    background: #FFF;
+}
+
+th, td {
+    padding-left: 1rem;
+    padding-right: 1rem;
+}
+
+table {
+    margin: 0 auto;
+}
+
+header {
+    height: 14vh;
+}
+
+#espacio2 {
+    height: 2vh;
+}
+
+#espacio1 {
+    height: 20px;
+}
+
+#solucion {
+    width: 33vh;
+    height: 5vh;
+}
+
+#botonito {
+    width: 33vh;
+    height: 16vh;
+}
+
+#soloempleados {
+    color: red;
+}
+
+#soloempleados2 {
+    color: lightgray;
+}
+
+#body2 {
+    background-color: dodgerblue;
+}
+
+#formulario2 {
+    padding-top: 20vh;
+    padding-bottom: 20vh;
+    background-color: whitesmoke;
+    border-radius: 8px;
+    box-shadow: 0, 0, 0, 0.5px;
+}
