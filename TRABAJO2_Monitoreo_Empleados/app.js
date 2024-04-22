@@ -1,76 +1,66 @@
 "use strict";
-document.addEventListener('DOMContentLoaded', function () {
-    let nombreInput = document.getElementById('nombre');
-    let edadInput = document.getElementById('edad');
-    let sistemaSelect = document.getElementById('sistema');
-    let identificacionInput = document.getElementById('identificacion');
-    let experienciaInput = document.getElementById('experiencia');
-    let solucionList = document.getElementById('solucion');
-    let formulario = document.getElementById('formulario2');
-    sistemaSelect.addEventListener('change', () => {
-        if (sistemaSelect.value === 'empleado') {
-            identificacionInput.removeAttribute('readonly');
-            experienciaInput.removeAttribute('readonly');
-        }
-        else {
-            identificacionInput.setAttribute('readonly', 'readonly');
-            experienciaInput.setAttribute('readonly', 'readonly');
-        }
-    });
-    sistemaSelect.dispatchEvent(new Event('change'));
-    class Person {
-        constructor(nombre, edad) {
-            this.nombre = nombre;
-            this.edad = edad;
-        }
+var _a;
+class Empleado {
+    constructor(nombre, edad, identificacion, experiencia) {
+        this.nombre = nombre;
+        this.edad = edad;
+        this.identificacion = identificacion;
+        this.experiencia = experiencia;
     }
-    class Employee extends Person {
-        constructor(nombre, edad, identificacion, experiencia) {
-            super(nombre, edad);
-            this.nombre = nombre;
-            this.edad = edad;
-            this.identificacion = identificacion;
-            this.experiencia = experiencia;
-        }
+    getNombre() {
+        return this.nombre;
     }
-    class FormInput {
-        constructor(nombre, edad, identificacion, experiencia) {
-            this.nombre = nombre;
-            this.edad = edad;
-            this.identificacion = identificacion;
-            this.experiencia = experiencia;
-        }
-        setValues(values) {
-            document.getElementById(this.nombre).value = values.get(this.nombre) || '';
-            document.getElementById(this.edad).value = values.get(this.edad) || '';
-            document.getElementById(this.identificacion).value = values.get(this.identificacion) || '';
-            document.getElementById(this.experiencia).value = values.get(this.experiencia) || '';
-        }
+    getEdad() {
+        return this.edad;
     }
-    let personList = new Set();
-    formulario.addEventListener('submit', (e) => {
-        e.preventDefault();
-        let person;
-        const formData = new Map();
-        const formInput = new FormInput('nombre', 'edad', 'identificacion', 'experiencia');
-        formData.set('nombre', nombreInput.value);
-        formData.set('edad', edadInput.value);
-        formData.set('identificacion', identificacionInput.value);
-        formData.set('experiencia', experienciaInput.value);
-        formInput.setValues(formData);
-        if (sistemaSelect.value === 'empleado') {
-            person = new Employee(nombreInput.value, parseInt(edadInput.value), identificacionInput.value, parseInt(experienciaInput.value));
+    getIdentificacion() {
+        return this.identificacion;
+    }
+    getExperiencia() {
+        return this.experiencia;
+    }
+}
+class EmpleadoManager {
+    constructor() {
+        this.empleados = new Map();
+    }
+    agregarEmpleado(empleado) {
+        if (this.empleados.has(empleado.getIdentificacion())) {
+            console.log(`El empleado con identificaci�n ${empleado.getIdentificacion()} ya existe`);
+            return false;
         }
-        else {
-            person = new Person(nombreInput.value, parseInt(edadInput.value));
-        }
-        personList.add(person);
-        const li = document.createElement('li');
-        li.textContent = `${person.nombre} - ${person.edad} a�os`;
-        if (sistemaSelect.value === 'empleado') {
-            li.textContent += ` - Identificaci�n: ${person.identificacion} - Experiencia: ${person.experiencia} a�os`;
-        }
-        solucionList.appendChild(li);
-    });
+        this.empleados.set(empleado.getIdentificacion(), empleado);
+        console.log(`Empleado agregado con �xito`);
+        return true;
+    }
+    getEdadMedia() {
+        let sumaEdades = 0;
+        this.empleados.forEach((empleado) => {
+            sumaEdades += empleado.getEdad();
+        });
+        return sumaEdades / this.empleados.size;
+    }
+    getExperienciaAcumulada() {
+        let sumaExperiencias = 0;
+        this.empleados.forEach((empleado) => {
+            sumaExperiencias += empleado.getExperiencia();
+        });
+        return sumaExperiencias;
+    }
+}
+const empleadoManager = new EmpleadoManager();
+(_a = document.getElementById('form2')) === null || _a === void 0 ? void 0 : _a.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const nombre = document.getElementById('nombre').value;
+    const edad = parseInt(document.getElementById('edad').value);
+    const identificacion = document.getElementById('identificacion').value;
+    const experiencia = parseInt(document.getElementById('experiencia').value);
+    const empleado = new Empleado(nombre, edad, identificacion, experiencia);
+    if (empleadoManager.agregarEmpleado(empleado)) {
+        console.log(`Empleado agregado con �xito`);
+        const edadMedia = empleadoManager.getEdadMedia();
+        const experienciaAcumulada = empleadoManager.getExperienciaAcumulada();
+        document.getElementById('solucion').innerText = `Edad media: ${edadMedia}, Experiencia acumulada: ${experienciaAcumulada}`;
+    }
 });
 //# sourceMappingURL=app.js.map
