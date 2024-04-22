@@ -5,7 +5,8 @@ const edad = document.getElementById('edad');
 const sistema = document.getElementById('sistema');
 const identificacion = document.getElementById('identificacion');
 const experiencia = document.getElementById('experiencia');
-const solucion = document.getElementById('solucion');
+const solucionUl = document.getElementById('solucion');
+const form2 = document.querySelector('#formulario2'); // Corrected the type
 sistema.addEventListener('change', () => {
     if (sistema.value === 'empleado') {
         identificacion.removeAttribute('readonly');
@@ -17,7 +18,6 @@ sistema.addEventListener('change', () => {
     }
 });
 sistema.dispatchEvent(new Event('change'));
-/*------------------------------------------------------------------------------------------------------------------*/
 class Persona {
     constructor(nombre, edad) {
         this.nombre = nombre;
@@ -33,71 +33,33 @@ class Empleado extends Persona {
         this.experiencia = experiencia;
     }
 }
-let personas = new Set();
-let empleados = new Map();
-const form = document.querySelector('#formulario2');
+const personas = new Set();
+const empleados = new Map();
 const nombreInput = document.querySelector('#nombre');
 const edadInput = document.querySelector('#edad');
 const identificacionInput = document.querySelector('#identificacion');
 const experienciaInput = document.querySelector('#experiencia');
 const sistemaSelect = document.querySelector('#sistema');
-function displayClients() {
-    const tableBody = document.querySelector('#clientesTableBody');
-    tableBody.innerHTML = '';
-    for (const persona of personas) {
-        const row = document.createElement('tr');
-        const nombreCell = document.createElement('td');
-        nombreCell.textContent = persona.nombre;
-        row.appendChild(nombreCell);
-        const edadCell = document.createElement('td');
-        edadCell.textContent = persona.edad.toString();
-        row.appendChild(edadCell);
-        tableBody.appendChild(row);
-    }
-}
-form.addEventListener('submit', (event) => {
+const solucion2 = new Set();
+const mapnombres = new Map();
+form2.addEventListener('submit', handleFormSubmit);
+function handleFormSubmit(event) {
     event.preventDefault();
-    const nombre = nombreInput.value;
-    const edad = parseInt(edadInput.value);
-    const identificacion = identificacionInput.value;
-    const experiencia = parseInt(experienciaInput.value);
-    const clase = sistemaSelect.value;
-    if (clase === 'empleado') {
-        const empleado = new Empleado(nombre, edad, identificacion, experiencia);
-        empleados.set(identificacion, empleado);
-        const solucionDiv = document.querySelector('#solucion');
-        const solucionParagraph = document.createElement('p');
-        solucionParagraph.textContent = `Se ha a�adido un nuevo empleado: ${nombre}`;
-        solucionDiv.appendChild(solucionParagraph);
-        nombreInput.value = '';
-        displayEmpleados();
+    const resultado = `${nombreInput.value} ${edadInput.value} ${identificacionInput.value} ${experienciaInput.value}`;
+    if (!solucion2.has(resultado)) {
+        solucion2.add(resultado);
+        alert('Nombre a�adido a la lista');
+        const cadena = `${nombreInput.value} / ${edadInput.value} / ${identificacionInput.value} / ${experienciaInput.value}`;
+        const li = document.createElement('li');
+        li.textContent = cadena;
+        solucionUl.appendChild(li);
     }
     else {
-        const persona = new Persona(nombre, edad);
-        personas.add(persona);
-        const solucionDiv = document.querySelector('#solucion');
-        const solucionParagraph = document.createElement('p');
-        solucionParagraph.textContent = `Se ha a�adido una nueva persona: ${nombre}`;
-        solucionDiv.appendChild(solucionParagraph);
-        nombreInput.value = '';
+        alert('Ese nombre ya ha sido a�adido a la lista');
     }
-    displayClients();
-});
-function displayEmpleados() {
-    const empleadosTableBody = document.querySelector("#empleadosTable tbody");
-    empleadosTableBody.innerHTML = "";
-    empleados.forEach((empleado, identificacion) => {
-        const row = document.createElement("tr");
-        const nombreCell = document.createElement("td");
-        nombreCell.textContent = empleado.nombre;
-        row.appendChild(nombreCell);
-        const edadCell = document.createElement("td");
-        edadCell.textContent = empleado.edad.toString();
-        row.appendChild(edadCell);
-        const identificacionCell = document.createElement("td");
-        identificacionCell.textContent = identificacion;
-        row.appendChild(identificacionCell);
-        empleadosTableBody.appendChild(row);
-    });
+    nombreInput.value = '';
+    edadInput.value = '';
+    experienciaInput.value = '';
+    identificacionInput.value = '';
 }
 //# sourceMappingURL=app.js.map

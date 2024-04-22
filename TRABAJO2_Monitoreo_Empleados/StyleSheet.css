@@ -66,3 +66,9 @@ header {
     border-radius: 8px;
     box-shadow: 0, 0, 0, 0.5px;
 }
+
+#center {
+    align-items: center;
+    justify-content: center;
+    align-self: center;
+}
