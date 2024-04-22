@@ -1,65 +1,76 @@
 "use strict";
-/*------------------------------------------------------------------------------------------------------------------*/
-const nombre = document.getElementById('nombre');
-const edad = document.getElementById('edad');
-const sistema = document.getElementById('sistema');
-const identificacion = document.getElementById('identificacion');
-const experiencia = document.getElementById('experiencia');
-const solucionUl = document.getElementById('solucion');
-const form2 = document.querySelector('#formulario2'); // Corrected the type
-sistema.addEventListener('change', () => {
-    if (sistema.value === 'empleado') {
-        identificacion.removeAttribute('readonly');
-        experiencia.removeAttribute('readonly');
+document.addEventListener('DOMContentLoaded', function () {
+    let nombreInput = document.getElementById('nombre');
+    let edadInput = document.getElementById('edad');
+    let sistemaSelect = document.getElementById('sistema');
+    let identificacionInput = document.getElementById('identificacion');
+    let experienciaInput = document.getElementById('experiencia');
+    let solucionList = document.getElementById('solucion');
+    let formulario = document.getElementById('formulario2');
+    sistemaSelect.addEventListener('change', () => {
+        if (sistemaSelect.value === 'empleado') {
+            identificacionInput.removeAttribute('readonly');
+            experienciaInput.removeAttribute('readonly');
+        }
+        else {
+            identificacionInput.setAttribute('readonly', 'readonly');
+            experienciaInput.setAttribute('readonly', 'readonly');
+        }
+    });
+    sistemaSelect.dispatchEvent(new Event('change'));
+    class Person {
+        constructor(nombre, edad) {
+            this.nombre = nombre;
+            this.edad = edad;
+        }
     }
-    else {
-        identificacion.setAttribute('readonly', 'readonly');
-        experiencia.setAttribute('readonly', 'readonly');
+    class Employee extends Person {
+        constructor(nombre, edad, identificacion, experiencia) {
+            super(nombre, edad);
+            this.nombre = nombre;
+            this.edad = edad;
+            this.identificacion = identificacion;
+            this.experiencia = experiencia;
+        }
     }
-});
-sistema.dispatchEvent(new Event('change'));
-class Persona {
-    constructor(nombre, edad) {
-        this.nombre = nombre;
-        this.edad = edad;
+    class FormInput {
+        constructor(nombre, edad, identificacion, experiencia) {
+            this.nombre = nombre;
+            this.edad = edad;
+            this.identificacion = identificacion;
+            this.experiencia = experiencia;
+        }
+        setValues(values) {
+            document.getElementById(this.nombre).value = values.get(this.nombre) || '';
+            document.getElementById(this.edad).value = values.get(this.edad) || '';
+            document.getElementById(this.identificacion).value = values.get(this.identificacion) || '';
+            document.getElementById(this.experiencia).value = values.get(this.experiencia) || '';
+        }
     }
-}
-class Empleado extends Persona {
-    constructor(nombre, edad, identificacion, experiencia) {
-        super(nombre, edad);
-        this.nombre = nombre;
-        this.edad = edad;
-        this.identificacion = identificacion;
-        this.experiencia = experiencia;
-    }
-}
-const personas = new Set();
-const empleados = new Map();
-const nombreInput = document.querySelector('#nombre');
-const edadInput = document.querySelector('#edad');
-const identificacionInput = document.querySelector('#identificacion');
-const experienciaInput = document.querySelector('#experiencia');
-const sistemaSelect = document.querySelector('#sistema');
-const solucion2 = new Set();
-const mapnombres = new Map();
-form2.addEventListener('submit', handleFormSubmit);
-function handleFormSubmit(event) {
-    event.preventDefault();
-    const resultado = `${nombreInput.value} ${edadInput.value} ${identificacionInput.value} ${experienciaInput.value}`;
-    if (!solucion2.has(resultado)) {
-        solucion2.add(resultado);
-        alert('Nombre a�adido a la lista');
-        const cadena = `${nombreInput.value} / ${edadInput.value} / ${identificacionInput.value} / ${experienciaInput.value}`;
+    let personList = new Set();
+    formulario.addEventListener('submit', (e) => {
+        e.preventDefault();
+        let person;
+        const formData = new Map();
+        const formInput = new FormInput('nombre', 'edad', 'identificacion', 'experiencia');
+        formData.set('nombre', nombreInput.value);
+        formData.set('edad', edadInput.value);
+        formData.set('identificacion', identificacionInput.value);
+        formData.set('experiencia', experienciaInput.value);
+        formInput.setValues(formData);
+        if (sistemaSelect.value === 'empleado') {
+            person = new Employee(nombreInput.value, parseInt(edadInput.value), identificacionInput.value, parseInt(experienciaInput.value));
+        }
+        else {
+            person = new Person(nombreInput.value, parseInt(edadInput.value));
+        }
+        personList.add(person);
         const li = document.createElement('li');
-        li.textContent = cadena;
-        solucionUl.appendChild(li);
-    }
-    else {
-        alert('Ese nombre ya ha sido a�adido a la lista');
-    }
-    nombreInput.value = '';
-    edadInput.value = '';
-    experienciaInput.value = '';
-    identificacionInput.value = '';
-}
+        li.textContent = `${person.nombre} - ${person.edad} a�os`;
+        if (sistemaSelect.value === 'empleado') {
+            li.textContent += ` - Identificaci�n: ${person.identificacion} - Experiencia: ${person.experiencia} a�os`;
+        }
+        solucionList.appendChild(li);
+    });
+});
 //# sourceMappingURL=app.js.map
