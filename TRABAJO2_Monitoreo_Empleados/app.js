@@ -1,66 +1,51 @@
 "use strict";
 var _a;
-class Empleado {
-    constructor(nombre, edad, identificacion, experiencia) {
+let inputs = Array.from(document.querySelectorAll('#nombre, #edad'));
+let sistema = document.querySelector('#sistema');
+let form = document.querySelector('#form2');
+let [nombreInput, edadInput] = inputs;
+inputs.forEach(input => input.addEventListener('input', () => sistema.dispatchEvent(new Event('change'))));
+sistema.addEventListener('change', () => {
+    inputs.forEach(input => input.toggleAttribute('readonly', sistema.value !== 'empleado'));
+});
+sistema.dispatchEvent(new Event('change'));
+class Persona {
+    constructor(nombre, edad) {
+        this.nombre = "";
+        this.edad = 0;
         this.nombre = nombre;
         this.edad = edad;
+    }
+}
+class Empleado extends Persona {
+    constructor(nombre, edad, identificacion, experiencia) {
+        super(nombre, edad);
+        this.identificacion = '';
+        this.experiencia = 0;
         this.identificacion = identificacion;
         this.experiencia = experiencia;
     }
-    getNombre() {
-        return this.nombre;
-    }
-    getEdad() {
-        return this.edad;
-    }
-    getIdentificacion() {
-        return this.identificacion;
-    }
-    getExperiencia() {
-        return this.experiencia;
-    }
 }
-class EmpleadoManager {
-    constructor() {
-        this.empleados = new Map();
+let personas = new Set();
+let empleados = new Map();
+let edadEx = 0;
+let edadExMediaEx = 0;
+(_a = document.getElementById("solucion")) === null || _a === void 0 ? void 0 : _a.addEventListener("click", () => {
+    let nombreInput = document.getElementById("nombre").value;
+    let edadInput = Number(document.getElementById("edad").value);
+    let usuario;
+    if (sistema.value === 'empleado') {
+        let identificacionInput = document.getElementById("identificacion").value;
+        let experienciaInput = Number(document.getElementById("experiencia").value);
+        usuario = new Empleado(nombreInput, edadInput, identificacionInput, experienciaInput);
     }
-    agregarEmpleado(empleado) {
-        if (this.empleados.has(empleado.getIdentificacion())) {
-            console.log(`El empleado con identificaci�n ${empleado.getIdentificacion()} ya existe`);
-            return false;
-        }
-        this.empleados.set(empleado.getIdentificacion(), empleado);
-        console.log(`Empleado agregado con �xito`);
-        return true;
+    else {
+        usuario = new Persona(nombreInput, edadInput);
     }
-    getEdadMedia() {
-        let sumaEdades = 0;
-        this.empleados.forEach((empleado) => {
-            sumaEdades += empleado.getEdad();
-        });
-        return sumaEdades / this.empleados.size;
-    }
-    getExperienciaAcumulada() {
-        let sumaExperiencias = 0;
-        this.empleados.forEach((empleado) => {
-            sumaExperiencias += empleado.getExperiencia();
-        });
-        return sumaExperiencias;
-    }
-}
-const empleadoManager = new EmpleadoManager();
-(_a = document.getElementById('form2')) === null || _a === void 0 ? void 0 : _a.addEventListener('submit', (e) => {
-    e.preventDefault();
-    const nombre = document.getElementById('nombre').value;
-    const edad = parseInt(document.getElementById('edad').value);
-    const identificacion = document.getElementById('identificacion').value;
-    const experiencia = parseInt(document.getElementById('experiencia').value);
-    const empleado = new Empleado(nombre, edad, identificacion, experiencia);
-    if (empleadoManager.agregarEmpleado(empleado)) {
-        console.log(`Empleado agregado con �xito`);
-        const edadMedia = empleadoManager.getEdadMedia();
-        const experienciaAcumulada = empleadoManager.getExperienciaAcumulada();
-        document.getElementById('solucion').innerText = `Edad media: ${edadMedia}, Experiencia acumulada: ${experienciaAcumulada}`;
-    }
+    personas.add(usuario);
+    edadEx += edadInput;
+    edadExMediaEx = edadEx / personas.size;
+    let mostrarInfo = `<p>Nombre: ${nombreInput}, Edad: ${edadInput}</p>`;
+    document.getElementById("solucion").value = mostrarInfo;
 });
 //# sourceMappingURL=app.js.map

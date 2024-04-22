@@ -1,81 +1,59 @@
-class Empleado {
-    private nombre: string;
-    private edad: number;
-    private identificacion: string;
-    private experiencia: number;
+let inputs = Array.from(document.querySelectorAll('#nombre, #edad')) as HTMLInputElement[];
+let sistema = document.querySelector('#sistema') as HTMLSelectElement;
+let form = document.querySelector('#form2') as HTMLFormElement;
+let [nombreInput, edadInput] = inputs;
 
-    constructor(nombre: string, edad: number, identificacion: string, experiencia: number) {
+inputs.forEach(input => input.addEventListener('input', () => sistema.dispatchEvent(new Event('change'))));
+
+sistema.addEventListener('change', () => {
+    inputs.forEach(input => input.toggleAttribute('readonly', sistema.value !== 'empleado'));
+});
+
+sistema.dispatchEvent(new Event('change'));
+
+class Persona {
+    nombre: string = "";
+    edad: number = 0;
+    constructor(nombre: string, edad: number) {
         this.nombre = nombre;
         this.edad = edad;
+    }
+}
+
+class Empleado extends Persona {
+    identificacion: string = '';
+    experiencia: number = 0;
+    constructor(nombre: string, edad: number, identificacion: string, experiencia: number) {
+        super(nombre, edad);
         this.identificacion = identificacion;
         this.experiencia = experiencia;
     }
-
-    getNombre(): string {
-        return this.nombre;
-    }
-
-    getEdad(): number {
-        return this.edad;
-    }
-
-    getIdentificacion(): string {
-        return this.identificacion;
-    }
-
-    getExperiencia(): number {
-        return this.experiencia;
-    }
 }
 
-class EmpleadoManager {
-    private empleados: Map<string, Empleado>;
+let personas = new Set<Persona>();
+let empleados = new Map<string, Empleado>();
 
-    constructor() {
-        this.empleados = new Map<string, Empleado>();
+let edadEx = 0;
+let edadExMediaEx = 0;
+
+document.getElementById("solucion")?.addEventListener("click", () => {
+    let nombreInput = (<HTMLInputElement>document.getElementById("nombre")).value;
+    let edadInput = Number((<HTMLInputElement>document.getElementById("edad")).value);
+
+    let usuario: Persona;
+    if (sistema.value === 'empleado') {
+        let identificacionInput = (<HTMLInputElement>document.getElementById("identificacion")).value;
+        let experienciaInput = Number((<HTMLInputElement>document.getElementById("experiencia")).value);
+
+        usuario = new Empleado(nombreInput, edadInput, identificacionInput, experienciaInput);
+    } else {
+        usuario = new Persona(nombreInput, edadInput);
     }
 
-    agregarEmpleado(empleado: Empleado): boolean {
-        if (this.empleados.has(empleado.getIdentificacion())) {
-            console.log(`El empleado con identificación ${empleado.getIdentificacion()} ya existe`);
-            return false;
-        }
-        this.empleados.set(empleado.getIdentificacion(), empleado);
-        console.log(`Empleado agregado con éxito`);
-        return true;
-    }
+    personas.add(usuario);
+    edadEx += edadInput;
+    edadExMediaEx = edadEx / personas.size;
 
-    getEdadMedia(): number {
-        let sumaEdades = 0;
-        this.empleados.forEach((empleado) => {
-            sumaEdades += empleado.getEdad();
-        });
-        return sumaEdades / this.empleados.size;
-    }
-
-    getExperienciaAcumulada(): number {
-        let sumaExperiencias = 0;
-        this.empleados.forEach((empleado) => {
-            sumaExperiencias += empleado.getExperiencia();
-        });
-        return sumaExperiencias;
-    }
-}
-
-const empleadoManager = new EmpleadoManager();
-
-document.getElementById('form2')?.addEventListener('submit', (e) => {
-    e.preventDefault();
-    const nombre = (document.getElementById('nombre') as HTMLInputElement).value;
-    const edad = parseInt((document.getElementById('edad') as HTMLInputElement).value);
-    const identificacion = (document.getElementById('identificacion') as HTMLInputElement).value;
-    const experiencia = parseInt((document.getElementById('experiencia') as HTMLInputElement).value);
-
-    const empleado = new Empleado(nombre, edad, identificacion, experiencia);
-    if (empleadoManager.agregarEmpleado(empleado)) {
-        console.log(`Empleado agregado con éxito`);
-        const edadMedia = empleadoManager.getEdadMedia();
-        const experienciaAcumulada = empleadoManager.getExperienciaAcumulada();
-        (document.getElementById('solucion') as HTMLLabelElement).innerText = `Edad media: ${edadMedia}, Experiencia acumulada: ${experienciaAcumulada}`;
-    }
+    let mostrarInfo = `<p>Nombre: ${nombreInput}, Edad: ${edadInput}</p>`;
+    (<HTMLInputElement>document.getElementById("solucion")).value = mostrarInfo;
 });
